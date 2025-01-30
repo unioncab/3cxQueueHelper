@@ -1,0 +1,10 @@
+{
+  "name": "3cxClipChrome",
+  "description": "Clip phone number from 3CX web client",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "images/clip-line-icon.png"
+  }
+}
