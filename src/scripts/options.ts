@@ -8,41 +8,54 @@ interface OptionsType {
   disableDivertToVoicemail?: boolean;
 }
 
+//todo: load options from storage on window.onload
+
 // In-page cache of the user's options
 const options: OptionsType = {};
-const optionsForm = document.getElementById("optionsForm") as HTMLFormElement;
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-    console.log(
-      `Storage key "${key}" in namespace "${namespace}" changed.`,
-      `Old value was "${oldValue}", new value is "${newValue}".`,
-    );
-  }
-});
+const webclientUrlInput = document.getElementById(
+  "webclientUrl",
+) as HTMLInputElement;
+const clipOnAnwserInput = document.getElementById(
+  "clipOnAnwser",
+) as HTMLInputElement;
+const inactiveOnDeclineInput = document.getElementById(
+  "inactiveOnDecline",
+) as HTMLInputElement;
+const disableDivertToVoicemailInput = document.getElementById(
+  "disableDivertToVoicemail",
+) as HTMLInputElement;
 
-// Immediately persist options changes
-optionsForm.addEventListener("change", (event: Event) => {
+webclientUrlInput.addEventListener("input", (event: Event) => {
   const target = event.target as HTMLInputElement;
-  console.log(target.name);
-  // Update the corresponding option based on the input's name
-  switch (target.name) {
-    case "webclientUrl":
-      options.webclientUrl = target.value;
-      break;
-    case "clipOnAnwser":
-      options.clipOnAnwser = target.checked;
-      break;
-    case "inactiveOnDecline":
-      options.inactiveOnDecline = target.checked;
-      break;
-    case "disableDivertToVoicemail":
-      options.disableDivertToVoicemail = target.checked;
-      break;
-  }
+  options.webclientUrl = target.value;
 
   // Persist the updated options to Chrome storage
-  chrome.storage.sync.set({ options });
+  chrome.storage.sync.set(options);
+});
+
+clipOnAnwserInput.addEventListener("change", (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  options.clipOnAnwser = target.checked;
+
+  // Persist the updated options to Chrome storage
+  chrome.storage.sync.set(options);
+});
+
+inactiveOnDeclineInput.addEventListener("change", (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  options.inactiveOnDecline = target.checked;
+
+  // Persist the updated options to Chrome storage
+  chrome.storage.sync.set(options);
+});
+
+disableDivertToVoicemailInput.addEventListener("change", (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  options.disableDivertToVoicemail = target.checked;
+
+  // Persist the updated options to Chrome storage
+  chrome.storage.sync.set(options);
 });
 
 // Initialize the form with the user's option settings
@@ -50,31 +63,17 @@ const data = await chrome.storage.sync.get("options");
 Object.assign(options, data.options);
 
 // Populate the form fields with the user's options
-if (optionsForm) {
-  const webclientUrlInput = optionsForm.querySelector(
-    "#webclientUrl",
-  ) as HTMLInputElement;
-  const clipOnAnwserInput = optionsForm.querySelector(
-    "#clipOnAnwser",
-  ) as HTMLInputElement;
-  const inactiveOnDeclineInput = optionsForm.querySelector(
-    "#inactiveOnDecline",
-  ) as HTMLInputElement;
-  const disableDivertToVoicemailInput = optionsForm.querySelector(
-    "#disableDivertToVoicemail",
-  ) as HTMLInputElement;
 
-  if (webclientUrlInput) {
-    webclientUrlInput.value = options.webclientUrl ?? "";
-  }
-  if (clipOnAnwserInput) {
-    clipOnAnwserInput.checked = options.clipOnAnwser ?? true;
-  }
-  if (inactiveOnDeclineInput) {
-    inactiveOnDeclineInput.checked = options.inactiveOnDecline ?? true;
-  }
-  if (disableDivertToVoicemailInput) {
-    disableDivertToVoicemailInput.checked =
-      options.disableDivertToVoicemail ?? true;
-  }
+if (webclientUrlInput) {
+  webclientUrlInput.value = options.webclientUrl ?? "";
+}
+if (clipOnAnwserInput) {
+  clipOnAnwserInput.checked = options.clipOnAnwser ?? true;
+}
+if (inactiveOnDeclineInput) {
+  inactiveOnDeclineInput.checked = options.inactiveOnDecline ?? true;
+}
+if (disableDivertToVoicemailInput) {
+  disableDivertToVoicemailInput.checked =
+    options.disableDivertToVoicemail ?? true;
 }
