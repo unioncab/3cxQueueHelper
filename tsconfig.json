@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "lib": ["es2022", "dom"],
+        "module": "es2022",
+        "preserveConstEnums": true,
+        "moduleResolution": "node",
+        "strict": true,
+        "target": "es2022",
+        "types": ["chrome"]
+    }
+}

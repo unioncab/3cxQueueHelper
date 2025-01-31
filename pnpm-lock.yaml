@@ -7,7 +7,7 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@types/chrome':
         specifier: ^0.0.300
         version: 0.0.300

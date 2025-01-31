@@ -1,4 +1,2 @@
-compile: popup.js
-
-popup.js: scripts/popup.ts
-	tsc scripts/popup.ts
+compile: src/scripts/options.ts src/scripts/background.ts
+	tsc

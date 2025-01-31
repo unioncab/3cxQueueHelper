@@ -4,7 +4,11 @@
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": "images/clip-line-icon.png"
-  }
+    "default_popup": "src/options/options.html",
+    "default_icon": "src/images/clip-line-icon.png"
+  },
+  "background": {
+    "service_worker": "src/scripts/background.js"
+  },
+  "permissions": ["storage"]
 }
