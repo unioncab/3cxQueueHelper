@@ -1,5 +1,5 @@
 /node_modules
-/scripts/*.js
+/src/**/*.js
 *.tsbuildinfo
 .env*.local
 .DS_Store
