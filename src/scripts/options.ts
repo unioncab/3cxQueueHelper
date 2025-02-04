@@ -59,21 +59,29 @@ disableDivertToVoicemailInput.addEventListener("change", (event: Event) => {
 });
 
 // Initialize the form with the user's option settings
-const data = await chrome.storage.sync.get("options");
-Object.assign(options, data.options);
+//const data = await chrome.storage.sync.get("options");
+//Object.assign(options, data.options);
 
 // Populate the form fields with the user's options
 
 if (webclientUrlInput) {
-  webclientUrlInput.value = options.webclientUrl ?? "";
+  chrome.storage.sync.get(["webclientUrl"]).then((result) => {
+    webclientUrlInput.value = result.webclientUrl ?? "";
+  });
 }
 if (clipOnAnwserInput) {
-  clipOnAnwserInput.checked = options.clipOnAnwser ?? true;
+  chrome.storage.sync.get(["clipOnAnwser"]).then((result) => {
+    clipOnAnwserInput.checked = result.clipOnAnwser ?? true;
+  });
 }
 if (inactiveOnDeclineInput) {
-  inactiveOnDeclineInput.checked = options.inactiveOnDecline ?? true;
+  chrome.storage.sync.get(["inactiveOnDecline"]).then((result) => {
+    inactiveOnDeclineInput.checked = result.inactiveOnDecline ?? true;
+  });
 }
 if (disableDivertToVoicemailInput) {
-  disableDivertToVoicemailInput.checked =
-    options.disableDivertToVoicemail ?? true;
+  chrome.storage.sync.get(["disableDivertToVoicemail"]).then((result) => {
+    disableDivertToVoicemailInput.checked =
+      result.disableDivertToVoicemail ?? true;
+  });
 }
