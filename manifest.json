@@ -7,8 +7,12 @@
     "default_popup": "src/options/options.html",
     "default_icon": "src/images/clip-line-icon.png"
   },
-  "background": {
-    "service_worker": "src/scripts/background.js"
-  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/scripts/content.js"],
+      "type": "module"
+    }
+  ],
   "permissions": ["storage"]
 }

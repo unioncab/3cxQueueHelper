@@ -1,4 +1,17 @@
-export {};
+interface Config {
+  // Selectors
+  answerButton: string;
+  declineButton: string;
+  voicemailButton: string;
+  phoneNumber: string;
+}
+
+export const config: Config = {
+  answerButton: "#btnAnswer",
+  declineButton: "#btnDecline",
+  voicemailButton: "#btnDivertToVoicemail",
+  phoneNumber: ".calls-wrapper .callNumber",
+};
 
 // Define the OptionsType interface
 interface OptionsType {
@@ -11,7 +24,7 @@ interface OptionsType {
 //todo: load options from storage on window.onload
 
 // In-page cache of the user's options
-const options: OptionsType = {};
+export const options: OptionsType = {};
 
 const webclientUrlInput = document.getElementById(
   "webclientUrl",
@@ -66,7 +79,7 @@ disableDivertToVoicemailInput.addEventListener("change", (event: Event) => {
 
 if (webclientUrlInput) {
   chrome.storage.sync.get(["webclientUrl"]).then((result) => {
-    webclientUrlInput.value = result.webclientUrl ?? "";
+    webclientUrlInput.value = result.webclientUrl ?? ".*";
   });
 }
 if (clipOnAnwserInput) {
