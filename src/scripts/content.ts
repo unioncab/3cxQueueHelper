@@ -107,6 +107,16 @@ class CallHandler {
 
   private handleDeclineButton() {
     console.log("Call Declined");
+
+    // Queue button only exists if account menu has been opened.
+    const accountMenu: HTMLElement | null = document.querySelector(
+      "wc-account-menu > div > app-avatar",
+    );
+    console.log(accountMenu);
+    if (!accountMenu) return;
+    accountMenu.click();
+    accountMenu.click();
+
     const menuElement: HTMLElement | null =
       document.getElementById("menuQueue");
     console.log("menuElement", menuElement);
