@@ -49,7 +49,8 @@ disableDivertToVoicemailInput.addEventListener("change", (event: Event) => {
 
 if (webclientUrlInput) {
   chrome.storage.sync.get(["webclientUrl"]).then((result) => {
-    webclientUrlInput.value = result.webclientUrl ?? ".*";
+    webclientUrlInput.value =
+      result.webclientUrl ?? "https://unioncab\.3cx\.us:5001/.*";
   });
 }
 if (inactiveOnDeclineInput) {
