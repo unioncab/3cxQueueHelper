@@ -39,7 +39,7 @@ class CallHandler {
     chrome.storage.sync
       .get(["webclientUrl"])
       .then((result) => {
-        this.options.webclientUrl = result.webclientUrl ?? ".*";
+        this.options.webclientUrl = result.webclientUrl;
       })
       .then(() => {
         console.log(
@@ -107,11 +107,33 @@ class CallHandler {
 
   private handleDeclineButton() {
     console.log("Call Declined");
+    const menuElement: HTMLElement | null =
+      document.getElementById("menuQueue");
+    console.log("menuElement", menuElement);
+
+    if (menuElement) {
+      const spanElements: NodeListOf<Element> =
+        menuElement.querySelectorAll("span");
+      Array.from(spanElements).forEach((span) => {
+        if (span.textContent?.includes("Logout")) {
+          menuElement.click();
+        }
+      });
+    }
+  }
+
+  public cleanUp() {
+    this.observer.disconnect();
   }
 }
 
 const handler = new CallHandler();
 window.addEventListener("load", () => {
-  console.log("DOMContentLoaded");
+  console.log("load");
   handler.initialize();
+});
+
+chrome.runtime.connect().onDisconnect.addListener(function () {
+  // clean up when content script gets disconnected
+  handler.cleanUp();
 });
