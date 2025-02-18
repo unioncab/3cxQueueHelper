@@ -1,64 +1,70 @@
-export {};
-import { config, options } from "./options";
+interface Options {
+  webclientUrl?: string;
+  inactiveOnDecline?: boolean;
+  disableDivertToVoicemail?: boolean;
+}
+
+interface Selectors {
+  // Selectors
+  answerButton: string;
+  declineButton: string;
+  voicemailButton: string;
+}
+
+const selectors: Selectors = {
+  answerButton: "#btnAnswer",
+  declineButton: "#btnDecline",
+  voicemailButton: "#btnDivertToVoicemail",
+};
 
 function isDomainValid(validDomainPattern: string): boolean {
   const regex = new RegExp(validDomainPattern);
-  return regex.test(window.location.hostname);
-}
 
-async function copyToClipboard(text: string): Promise<void> {
-  try {
-    await navigator.clipboard.writeText(text);
-    console.log(`Phone number copied ${text}`);
-  } catch (err) {
-    console.error(`Failed to copy ${err}`);
-  }
+  console.log(window.location.href, validDomainPattern);
+  const valid = regex.test(window.location.href);
+  console.log("valid:", valid);
+  return valid;
 }
 
 class CallHandler {
   private observer: MutationObserver;
+  private options: Options;
 
   constructor() {
     this.observer = new MutationObserver(this.handleMutation.bind(this));
+    this.options = {};
   }
 
-  private handleAnswerButton() {
-    console.log("Call Answered");
-  }
-  private handleDeclineButton() {
-    console.log("Call Declined");
-  }
+  public initialize(): void {
+    chrome.storage.sync
+      .get(["webclientUrl"])
+      .then((result) => {
+        this.options.webclientUrl = result.webclientUrl ?? ".*";
+      })
+      .then(() => {
+        console.log(
+          this.options.webclientUrl,
+          isDomainValid(this.options.webclientUrl ?? ""),
+        );
+        if (
+          this.options.webclientUrl &&
+          !isDomainValid(this.options.webclientUrl)
+        ) {
+          console.log("Not a valid 3CX Webclient Domain; extension inactive.");
+          return;
+        }
 
-  // Run when visiting domain in settings
-  private watchForCalls(): void {
-    const answerButton = document.querySelector<HTMLElement>(
-      config.answerButton,
-    );
-    const declineButton = document.querySelector<HTMLElement>(
-      config.declineButton,
-    );
-    const voicemailButton = document.querySelector<HTMLElement>(
-      config.voicemailButton,
-    );
-    if (
-      answerButton &&
-      !answerButton.hasAttribute("data-listener-added") &&
-      options.clipOnAnwser
-    ) {
-      answerButton.addEventListener("mousedown", this.handleAnswerButton);
-      answerButton.setAttribute("data-listener-added", "true");
-    }
-    if (
-      declineButton &&
-      !declineButton.hasAttribute("data-listener-added") &&
-      options.inactiveOnDecline
-    ) {
-      declineButton.addEventListener("mousedown", this.handleDeclineButton);
-      declineButton.setAttribute("data-listener-added", "true");
-    }
-    if (voicemailButton && options.disableDivertToVoicemail) {
-      voicemailButton.style.visibility = "hidden";
-    }
+        console.log("Valid 3CX Web Client Domain; extension active");
+
+        // observer runs on mutation watchForCalls
+        this.observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+
+        // check for existing buttons.
+        this.watchForCalls();
+      });
   }
 
   private handleMutation(mutations: MutationRecord[]): void {
@@ -69,32 +75,43 @@ class CallHandler {
     });
   }
 
-  public initialize(): void {
-    if (options.webclientUrl && !isDomainValid(options.webclientUrl)) {
-      console.log("Not a valid 3CX Webclient Domain; extension inactive.");
-      return;
+  // Run when visiting domain in settings
+  private watchForCalls(): void {
+    const declineButton = document.querySelector<HTMLElement>(
+      selectors.declineButton,
+    );
+
+    chrome.storage.sync.get(["inactiveOnDecline"]).then((result) => {
+      this.options.inactiveOnDecline = result.inactiveOnDecline ?? true;
+    });
+    if (
+      declineButton &&
+      !declineButton.hasAttribute("data-listener-added") &&
+      this.options.inactiveOnDecline
+    ) {
+      declineButton.addEventListener("mousedown", this.handleDeclineButton);
+      declineButton.setAttribute("data-listener-added", "true");
     }
 
-    console.log("Valid 3CX Web Client Domain; extsnsion active");
-
-    this.observer.observe(document.body, {
-      childList: true,
-      subtree: true,
+    chrome.storage.sync.get(["disableDivertToVoicemail"]).then((result) => {
+      this.options.disableDivertToVoicemail =
+        result.disableDivertToVoicemail ?? true;
     });
-
-    // check for existing buttons.
-    this.watchForCalls();
+    const voicemailButton = document.querySelector<HTMLElement>(
+      selectors.voicemailButton,
+    );
+    if (voicemailButton && this.options.disableDivertToVoicemail) {
+      voicemailButton.style.visibility = "hidden";
+    }
   }
-  public cleanup(): void {
-    this.observer.disconnect();
+
+  private handleDeclineButton() {
+    console.log("Call Declined");
   }
 }
 
 const handler = new CallHandler();
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
+  console.log("DOMContentLoaded");
   handler.initialize();
-});
-
-document.addEventListener("unload", () => {
-  handler.cleanup();
 });
