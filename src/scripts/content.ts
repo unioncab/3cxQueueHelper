@@ -1,15 +1,4 @@
-interface Options {
-  webclientUrl?: string;
-  inactiveOnDecline?: boolean;
-  disableDivertToVoicemail?: boolean;
-}
-
-interface Selectors {
-  // Selectors
-  answerButton: string;
-  declineButton: string;
-  voicemailButton: string;
-}
+import { Options, Selectors } from "../types/types";
 
 const selectors: Selectors = {
   answerButton: "#btnAnswer",

@@ -1,8 +1,4 @@
-interface Options {
-  webclientUrl?: string;
-  inactiveOnDecline?: boolean;
-  disableDivertToVoicemail?: boolean;
-}
+import { Options } from "../types/types";
 
 // In-page cache of the user's options
 const options: Options = {};

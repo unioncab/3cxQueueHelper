@@ -5,12 +5,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "esbuild src/scripts/content.ts src/scripts/options.ts --bundle --outdir=dist --format=esm"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/chrome": "^0.0.300"
+    "@types/chrome": "^0.0.300",
+    "esbuild": "^0.25.0"
   }
 }
