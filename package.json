@@ -5,7 +5,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/scripts/content.ts src/scripts/options.ts --bundle --outdir=dist --format=esm"
+    "prebuild": "rm -r dist",
+    "build": "esbuild src/scripts/content.ts src/scripts/options.ts --bundle --outdir=dist --format=esm",
+    "prepublish": "pnpm run build && rm -r out && mkdir out",
+    "publish": "zip -r out/3cxQueueHelper.zip manifest.json src/options src/images dist"
   },
   "keywords": [],
   "author": "",

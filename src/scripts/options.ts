@@ -1,3 +1,4 @@
+import { DEFAULT_VALUES } from "../types/defaults";
 import { Options } from "../types/types";
 
 // In-page cache of the user's options
@@ -46,17 +47,19 @@ disableDivertToVoicemailInput.addEventListener("change", (event: Event) => {
 if (webclientUrlInput) {
   chrome.storage.sync.get(["webclientUrl"]).then((result) => {
     webclientUrlInput.value =
-      result.webclientUrl ?? "https://unioncab\.3cx\.us:5001/.*";
+      result.webclientUrl ?? DEFAULT_VALUES.webclientUrl;
   });
 }
 if (inactiveOnDeclineInput) {
   chrome.storage.sync.get(["inactiveOnDecline"]).then((result) => {
-    inactiveOnDeclineInput.checked = result.inactiveOnDecline ?? true;
+    inactiveOnDeclineInput.checked =
+      result.inactiveOnDecline ?? DEFAULT_VALUES.inactiveOnDecline;
   });
 }
 if (disableDivertToVoicemailInput) {
   chrome.storage.sync.get(["disableDivertToVoicemail"]).then((result) => {
     disableDivertToVoicemailInput.checked =
-      result.disableDivertToVoicemail ?? true;
+      result.disableDivertToVoicemail ??
+      DEFAULT_VALUES.disableDivertToVoicemail;
   });
 }

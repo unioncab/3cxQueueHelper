@@ -1,6 +1,6 @@
 {
   "name": "3cxClipChrome",
-  "description": "Clip phone number from 3CX web client",
+  "description": "Extension modifies the 3CX web client, hides the send to vmail button and removes user from the queue when a call is decline.",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
@@ -13,5 +13,8 @@
       "js": ["dist/content.js"]
     }
   ],
-  "permissions": ["storage"]
+  "permissions": ["storage"],
+  "icons": {
+    "512": "src/images/clip-line-icon.png"
+  }
 }

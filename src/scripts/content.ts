@@ -1,4 +1,5 @@
 import { Options, Selectors } from "../types/types";
+import { DEFAULT_VALUES } from "../types/defaults";
 
 const selectors: Selectors = {
   answerButton: "#btnAnswer",
@@ -9,9 +10,7 @@ const selectors: Selectors = {
 function isDomainValid(validDomainPattern: string): boolean {
   const regex = new RegExp(validDomainPattern);
 
-  console.log(window.location.href, validDomainPattern);
   const valid = regex.test(window.location.href);
-  console.log("valid:", valid);
   return valid;
 }
 
@@ -28,18 +27,15 @@ class CallHandler {
     chrome.storage.sync
       .get(["webclientUrl"])
       .then((result) => {
-        this.options.webclientUrl = result.webclientUrl;
+        this.options.webclientUrl =
+          result.webclientUrl ?? DEFAULT_VALUES.webclientUrl;
       })
       .then(() => {
-        console.log(
-          this.options.webclientUrl,
-          isDomainValid(this.options.webclientUrl ?? ""),
-        );
         if (
           this.options.webclientUrl &&
           !isDomainValid(this.options.webclientUrl)
         ) {
-          console.log("Not a valid 3CX Webclient Domain; extension inactive.");
+          //console.log("Not a valid 3CX Webclient Domain; extension inactive.");
           return;
         }
 
@@ -71,7 +67,8 @@ class CallHandler {
     );
 
     chrome.storage.sync.get(["inactiveOnDecline"]).then((result) => {
-      this.options.inactiveOnDecline = result.inactiveOnDecline ?? true;
+      this.options.inactiveOnDecline =
+        result.inactiveOnDecline ?? DEFAULT_VALUES.inactiveOnDecline;
     });
     if (
       declineButton &&
@@ -84,7 +81,8 @@ class CallHandler {
 
     chrome.storage.sync.get(["disableDivertToVoicemail"]).then((result) => {
       this.options.disableDivertToVoicemail =
-        result.disableDivertToVoicemail ?? true;
+        result.disableDivertToVoicemail ??
+        DEFAULT_VALUES.disableDivertToVoicemail;
     });
     const voicemailButton = document.querySelector<HTMLElement>(
       selectors.voicemailButton,
