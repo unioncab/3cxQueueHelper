@@ -1,11 +1,11 @@
 {
-  "name": "3cxClipChrome",
+  "name": "3cxQueueHelper",
   "description": "Extension modifies the 3CX web client, hides the send to vmail button and removes user from the queue when a call is decline.",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
     "default_popup": "src/options/options.html",
-    "default_icon": "src/images/clip-line-icon.png"
+    "default_icon": "src/images/clip-line-512.png"
   },
   "content_scripts": [
     {
@@ -15,6 +15,11 @@
   ],
   "permissions": ["storage"],
   "icons": {
-    "512": "src/images/clip-line-icon.png"
+    "16": "src/images/clip-line-16.png",
+    "32": "src/images/clip-line-32.png",
+    "64": "src/images/clip-line-64.png",
+    "128": "src/images/clip-line-128.png",
+    "256": "src/images/clip-line-256.png",
+    "512": "src/images/clip-line-512.png"
   }
 }
